@@ -2,7 +2,7 @@ var stage_table = [];
 var filtered_stage_table = [];
 
 function test_alert(str) {
-    alert(str)
+    alert(str);
 }
 
 //https://uxmilk.jp/11586
@@ -39,23 +39,27 @@ function shape_array_for_stage_table(array) {
     update_webpage_table();
 }
 
+
+//ここでのarray.includes(item_id)の処理時に、
+//「最終行以外の末尾アイテムが合致していても"false"を返す」という問題が生じたため、
+//「csv側の最終列に"dummy"列を追加する」という力技で無理矢理なんとかしている、要改善
 function filter_stage_table_from_item_id(item_id) {
     if (item_id === "all") {
         filtered_stage_table = Array.from(stage_table);
     } else {
         filtered_stage_table = stage_table.filter(stage => stage[2].includes(item_id));
     }
-    update_webpage_table()
+    update_webpage_table();
 }
 
 //https://qiita.com/izcomaco/items/7ef5a08a9c542d84907b
 function update_webpage_table() {
     reset_webpage_table()
     var web_table = JSON.parse(JSON.stringify(filtered_stage_table));
-    web_table = insert_image_for_table(web_table, 2)
+    web_table = insert_image_for_table(web_table, 2);
 
     var column_length = web_table.length;
-    var row_length = web_table[0].length;
+    var row_length = web_table[0].length - 1; //dummy分を削除している
     var tbody = document.getElementById("stage_table");
 
     for (i = 0; i < column_length; i++) {
