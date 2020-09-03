@@ -30,17 +30,18 @@ function convert_csv_to_array(csv_text) {
 }
 
 function shape_array_for_stage_table(array) {
-    for (var i = 1; i < array.length; i++) {
+    for (var i = 0; i < array.length; i++) {
         array[i][2] = array[i][2].split(' ');
     }
 
-    stage_table = filtered_stage_table = array;
+    stage_table = JSON.parse(JSON.stringify(array));
+    filtered_stage_table = JSON.parse(JSON.stringify(array));
     update_webpage_table();
 }
 
 function filter_stage_table_from_item_id(item_id) {
     if (item_id === "all") {
-        filtered_stage_table = stage_table;
+        filtered_stage_table = Array.from(stage_table);
     } else {
         filtered_stage_table = stage_table.filter(stage => stage[2].includes(item_id));
     }
@@ -50,16 +51,18 @@ function filter_stage_table_from_item_id(item_id) {
 //https://qiita.com/izcomaco/items/7ef5a08a9c542d84907b
 function update_webpage_table() {
     reset_webpage_table()
+    var web_table = JSON.parse(JSON.stringify(filtered_stage_table));
+    web_table = insert_image_for_table(web_table, 2)
 
-    var column_length = filtered_stage_table.length
-    var row_length = filtered_stage_table[0].length;
+    var column_length = web_table.length;
+    var row_length = web_table[0].length;
     var tbody = document.getElementById("stage_table");
 
     for (i = 0; i < column_length; i++) {
         var tr = document.createElement("tr");
         for (j = 1; j < row_length; j++) {
             var td = document.createElement("td");
-            td.innerHTML = filtered_stage_table[i][j];
+            td.innerHTML = web_table[i][j];
             //alert("done!");
             tr.appendChild(td);
         }
@@ -72,6 +75,18 @@ function reset_webpage_table() {
     while (tbody.firstChild) {
         tbody.removeChild(tbody.firstChild);
     }
+}
+
+function insert_image_for_table(table, column) {
+    var column_length = table.length;
+    for (i = 0; i < column_length; i++) {
+        var value_length = table[i][column].length;
+        for (j = 0; j < value_length; j++) {
+            table[i][column][j] = "<img src='images/item" + table[i][column][j] + ".png' width='30px' height='30px'>"
+        }
+        table[i][column] = table[i][column].join(' ')
+    }
+    return table;
 }
 
 //startup_webpage();
