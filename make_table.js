@@ -85,8 +85,11 @@ function insert_image_for_table(table, column) {
     var column_length = table.length;
     for (i = 0; i < column_length; i++) {
         var value_length = table[i][column].length;
+        //alert(i + " = " + value_length);
         for (j = 0; j < value_length; j++) {
-            table[i][column][j] = "<img src='images/item" + table[i][column][j] + ".png' width='30px' height='30px'>"
+            if (table[i][column][j] !== "") {
+                table[i][column][j] = "<img src='images/item" + table[i][column][j] + ".png' width='30px' height='30px'>"
+            }
         }
         table[i][column] = table[i][column].join(' ')
     }
